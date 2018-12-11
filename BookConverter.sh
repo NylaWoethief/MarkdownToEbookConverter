@@ -1,11 +1,9 @@
 #!/bin/bash
 
-# This script converts a Markdown file into
-# ODT, PDF, and EPUB
+# This script converts a Markdown file into ODT, PDF, RTF, and EPUB
 
 # Get information about book
 
-InformationCorrect="No"
 Yes='[Yy][Ee]*[Ss]*'
 No='[Nn][Oo]*'
 
@@ -16,7 +14,14 @@ read -p "Please type copyright information (eg. Creative Commons Attribution 4.0
 read -p "Please type language code (eg. en for English, es for Spanish, fr for French): " LanguageCode
 read -p "Do you have a cover image? (YES/NO): " CheckForCover
 
-printf "You entered:\n Markdown file: $MarkdownFile\n Title: $Title\n Name: $Penname\n Copyright: $Copyright\n Language: $LanguageCode\n Cover Image: $CheckForCover\n"
+echo "You entered:
+Markdown file: $MarkdownFile
+Title: $Title
+Name: $Penname
+Copyright: $Copyright
+Language: $LanguageCode
+Cover Image: $CheckForCover
+"
 
 TitlePlusName=$Penname-$Title
 TitlePlusNameNoSpaces="$(echo $TitlePlusName | tr -d ' ')"
@@ -48,6 +53,10 @@ while [[ $CoverAnswered == "False" ]]; do
 
     sed -i "7s/.*/cover-image: $BookCoverPath/" "$TitlePlusNameNoSpaces/$TitleMetadata"
 
+    # Strip cover image metadata
+
+    mat $BookCoverPath
+
   elif [[ $CheckForCover == $No ]]; then
     CoverAnswered="True"
   else read -p "I did not understand your answer. Do you have a cover image? (YES/NO): " CheckForCover
@@ -73,11 +82,11 @@ sed -i "6s/.*/lang: $LanguageCode/" "$TitlePlusNameNoSpaces/$TitleMetadata"
 pandoc $MarkdownFile --pdf-engine=pdflatex -o "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.pdf" --table-of-contents
 pandoc -s -f markdown -t odt -o "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.odt" $MarkdownFile
 pandoc -s -f markdown -t epub -o "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.epub" "$TitlePlusNameNoSpaces/$TitleMetadata" $MarkdownFile --table-of-contents
+pandoc -s -f markdown -t rtf -o "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.rtf" $MarkdownFile
 
 # Strip metadata from odt
 
-mat "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.odt" --backup
-rm "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.odt.bak"
+mat "$TitlePlusNameNoSpaces/$TitlePlusNameNoSpaces.odt"
 
 # Remove metadata file because it is no longer needed
 
