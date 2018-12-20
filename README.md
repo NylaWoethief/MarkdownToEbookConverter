@@ -25,7 +25,7 @@ The folder and ebook files will follow the naming scheme of AuthorName-BookTitle
 
 ## Running
 
-Before running the script for the first time, give `BookConverter.sh` executable privileges by typing `chmod +x BookConverter.sh` in your terminal.
+Before running the script for the first time, give `BookConverter.sh` or `TUIBookCOnverter.sh` executable privileges by typing `chmod +x BookConverter.sh` or `chmod +x TUIBookConverter.sh` in your terminal.
 
 Type `./BookConverter.sh` to run the script and answer all of the prompts.
 
